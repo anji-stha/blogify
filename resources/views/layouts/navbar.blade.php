@@ -1,5 +1,5 @@
-<nav class="navbar navbar-expand-lg bg-body-tertiary mb-4">
-    <div class="container-fluid">
+<nav class="navbar navbar-expand-lg bg-body-secondary mb-4">
+    <div class="container">
         <a class="navbar-brand" href="#">Navbar</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
             aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -12,7 +12,7 @@
                 </li>
                 @role('super-admin|author')
                     <li class="nav-item">
-                        <a class="nav-link" href="dashboard">Dashboard</a>
+                        <a class="nav-link" href="{{ route('admin.dashboard') }}">Dashboard</a>
                     </li>
                 @endrole
                 @role('super-admin')
@@ -32,6 +32,9 @@
                         </button>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="{{ route('profile') }}">Profile</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
                             <li><a class="dropdown-item" href="{{ route('logout') }}">Logout</a></li>
                         </ul>
                     </li>
@@ -42,6 +45,9 @@
                         </button>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="{{ route('register.user') }}">Register as User</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
                             <li><a class="dropdown-item" href="{{ route('register.author') }}">Register as Author</a></li>
                         </ul>
                     </li>

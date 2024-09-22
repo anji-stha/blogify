@@ -32,7 +32,7 @@ class AuthController extends Controller
         return view('auth.login');
     }
 
-    public function store($type = null, Request $request): RedirectResponse
+    public function store(Request $request, $type = null): RedirectResponse
     {
         $validated = Validator::make($request->all(), [
             'inputName' => 'required',
@@ -64,8 +64,6 @@ class AuthController extends Controller
             $user->assignRole('viewer');
         }
 
-        event(new Registered($user));
-
         return redirect()->route('login')->with('success', 'Registration Successful.');
     }
 
@@ -92,9 +90,11 @@ class AuthController extends Controller
         }
 
         Auth::login($user);
+        event(new Registered($user));
+
         $request->session()->regenerate();
 
-        return redirect('/');
+        return redirect()->route('verification.notice');
     }
 
     public function logout(Request $request): RedirectResponse
@@ -102,12 +102,7 @@ class AuthController extends Controller
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        return redirect('/');
-    }
-
-    public function dashboard()
-    {
-        return view('dashboard');
+        return redirect()->route('login');
     }
 
     public function profile()
