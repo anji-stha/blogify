@@ -27,12 +27,38 @@
                                     class="nav-icon bi bi-circle"></i>
                                 <p>Index</p>
                             </a> </li>
-                        <li class="nav-item"> <a href="{{ route('blog.create') }}" class="nav-link"> <i
-                                    class="nav-icon bi bi-circle"></i>
-                                <p>Create</p>
-                            </a> </li>
                     </ul>
                 </li>
+                @role('super-admin')
+                    <li class="nav-item"> <a href="#" class="nav-link"> <i
+                                class="nav-icon bi bi-box-arrow-in-right"></i>
+                            <p>
+                                Roles
+                                <i class="nav-arrow bi bi-chevron-right"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item"> <a href="{{ route('index.role') }}" class="nav-link"> <i
+                                        class="nav-icon bi bi-circle"></i>
+                                    <p>Index</p>
+                                </a> </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item"> <a href="#" class="nav-link"> <i
+                                class="nav-icon bi bi-box-arrow-in-right"></i>
+                            <p>
+                                Permissions
+                                <i class="nav-arrow bi bi-chevron-right"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item"> <a href="{{ route('index.permission') }}" class="nav-link"> <i
+                                        class="nav-icon bi bi-circle"></i>
+                                    <p>Index</p>
+                                </a> </li>
+                        </ul>
+                    </li>
+                @endrole
             </ul> <!--end::Sidebar Menu-->
         </nav>
     </div> <!--end::Sidebar Wrapper-->

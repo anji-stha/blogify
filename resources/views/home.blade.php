@@ -1,10 +1,6 @@
 @extends('layouts.main')
 @section('content')
-    @if (Session::has('message'))
-        <p class="alert {{ Session::get('alert-class', 'alert-info') }}">
-            {{ Session::get('message') }}
-        </p>
-    @endif
+    @include('message')
     <div class="card">
         <p> Simplicity is the essence of happiness. - Cedric Bledsoe </p>
         Don't be a slave to you mind,

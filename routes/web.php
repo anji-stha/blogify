@@ -11,6 +11,7 @@ use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 use Illuminate\Routing\RouteGroup;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Auth\Events\Verified;
 
 /*
 |--------------------------------------------------------------------------
@@ -64,7 +65,7 @@ Route::get('/email/verify', function () {
     $user = auth()->user();
 
     if ($user->hasVerifiedEmail()) {
-        return $user->hasRole('author') ? redirect('/admin-dashboard') : redirect('/');
+        return $user->hasRole('author|super-admin') ? redirect('/dashboard') : redirect('/');
     }
 
     return view('auth.verify-email');
@@ -76,14 +77,14 @@ Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $requ
 
     // Check if already verified
     if ($user->hasVerifiedEmail()) {
-        return redirect($user->hasRole('author') ? '/admin-dashboard' : '/')->with('success', 'You are already verified.');
+        return redirect($user->hasRole('author|super-admin') ? '/dashboard' : '/')->with('success', 'You are already verified.');
     }
 
     // Mark email as verified
     $user->markEmailAsVerified();
     event(new Verified($user));
 
-    return redirect($user->hasRole('author') ? '/admin-dashboard' : '/')->with('success', 'Your email has been verified.');
+    return redirect($user->hasRole('author|super-admin') ? '/dashboard' : '/')->with('success', 'Your email has been verified.');
 })->middleware(['auth', 'signed'])->name('verification.verify');
 
 // Resend verification notification
@@ -91,7 +92,7 @@ Route::post('/email/verification-notification', function (Request $request) {
     $user = $request->user();
 
     if ($user->hasVerifiedEmail()) {
-        return redirect($user->hasRole('author') ? '/admin-dashboard' : '/')->with('success', 'You are already verified.');
+        return redirect($user->hasRole('author|super-admin') ? '/dashboard' : '/')->with('success', 'You are already verified.');
     }
 
     $user->sendEmailVerificationNotification();
