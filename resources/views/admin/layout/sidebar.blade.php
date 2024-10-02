@@ -58,6 +58,33 @@
                                 </a> </li>
                         </ul>
                     </li>
+                    <li class="nav-item"> <a href="#" class="nav-link"> <i class="nav-icon fa-solid fa-list"></i>
+                            <p>
+                                Categories
+                                <i class="nav-arrow bi bi-chevron-right"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item"> <a href="{{ route('category.index') }}" class="nav-link"> <i
+                                        class="nav-icon bi bi-circle"></i>
+                                    <p>Index</p>
+                                </a> </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item"> <a href="#" class="nav-link">
+                        <i class="nav-icon bi bi-tags"></i>
+                            <p>
+                                Tags
+                            </p>
+                            <i class="nav-arrow bi bi-chevron-right"></i>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item"> <a href="{{ route('tags.index') }}" class="nav-link"> <i
+                                        class="nav-icon bi bi-circle"></i>
+                                    <p>Index</p>
+                                </a> </li>
+                        </ul>
+                    </li>
                 @endrole
             </ul> <!--end::Sidebar Menu-->
         </nav>

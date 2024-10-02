@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\BlogController;
+use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\TagController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RoleController;
@@ -102,6 +104,19 @@ Route::post('/email/verification-notification', function (Request $request) {
 // Admin
 Route::middleware(['auth', 'verified', 'role:super-admin|author'])->group(function () {
     Route::get('/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
+
+    // Blogs
     Route::get('/blogs', [BlogController::class, 'index'])->name('blog.index');
     Route::get('/create-blog', [BlogController::class, 'create'])->name('blog.create');
+
+    // Categories
+    Route::get('/categories', [CategoryController::class, 'index'])->name('category.index');
+    Route::get('/categories/create', [CategoryController::class, 'create'])->name('category.create');
+    Route::post('/categories/store', [CategoryController::class, 'store'])->name('category.store');
+    Route::get('/category/edit/{id}', [CategoryController::class, 'edit'])->name('category.edit');
+    Route::post('/category/{id}', [CategoryController::class, 'update'])->name('category.update');
+    Route::delete('/category', [CategoryController::class, 'delete'])->name('category.delete');
+
+    // Tags
+    Route::get('/tags', [TagController::class, 'index'])->name('tags.index');
 });

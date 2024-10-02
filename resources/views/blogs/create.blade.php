@@ -38,9 +38,13 @@
                                     <label for="slug" class="form-label">Slug</label>
                                     <input type="text" class="form-control" id="slug" name="slug" />
                                 </div>
-                                <div class="input-group mb-3">
-                                    <input type="file" class="form-control" id="image" />
-                                    <label class="input-group-text" for="image">Upload</label>
+                                <div class="mb-3">
+                                    <label for="image" class="form-label">Image</label>
+                                    <input class="form-control" type="file" id="image" name="image">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="content" class="form-label">Body</label>
+                                    <textarea id="editor" name="content"></textarea>
                                 </div>
                             </div>
                             <div class="card-footer">
