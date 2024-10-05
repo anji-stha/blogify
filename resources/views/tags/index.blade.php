@@ -21,7 +21,7 @@
         <div class="container-fluid"> <!--begin::Row-->
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <a class="btn btn-sm btn-primary" href="{{ route('create.role') }}">Create</a>
+                    <a class="btn btn-sm btn-primary" href="{{ route('tags.create') }}">Create</a>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
