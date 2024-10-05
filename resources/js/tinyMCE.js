@@ -8,15 +8,18 @@ import "tinymce/plugins/link";
 import "tinymce/plugins/image";
 import "tinymce/plugins/lists";
 import "tinymce/plugins/code";
+import "tinymce/skins/ui/oxide/skin.js";
+import 'tinymce/skins/ui/oxide/content.js';
+import 'tinymce/skins/content/default/content.js';
 
-// .. After imports init TinyMCE ..
+
 window.addEventListener("DOMContentLoaded", () => {
     tinymce.init({
         selector: "textarea#editor",
-
-        /* TinyMCE configuration options */
-        skin: false,
-        content_css: false,
+        license_key: "gpl",
+        skin: "oxide",
+        skin_url: 'default',
+        content_css: 'default',
         plugins: "advlist autolink link image lists code",
         toolbar:
             "undo redo | styleselect | bold italic | alignleft aligncenter alignright | bullist numlist | link image",
