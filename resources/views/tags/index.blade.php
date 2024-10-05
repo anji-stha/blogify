@@ -30,11 +30,33 @@
                                 <tr>
                                     <th scope="col" class="text-center">S.N</th>
                                     <th scope="col" class="text-center">Name</th>
+                                    <th scope="col" class="text-center">Slug</th>
                                     <th scope="col" class="text-center">Created Date</th>
                                     <th colspan="2" class="text-center">Handle</th>
                                 </tr>
                             </thead>
                             <tbody>
+                                @if (!empty($tags))
+                                    @foreach ($tags as $key => $value)
+                                        <tr>
+                                            <td>{{ $key + 1 }}</td>
+                                            <td>{{ $value['name'] }}</td>
+                                            <td>{{ $value['slug'] }}</td>
+                                            <td>{{ date('j M, Y', strtotime($value['created_at'])) }}</td>
+                                            <td>
+                                                <a class="btn btn-sm btn-info"
+                                                    href="{{ route('tags.edit', $value['id']) }}">Edit</a>
+                                                <form action="{{ route('tags.delete') }}" method="POST" class="d-inline"
+                                                    onsubmit="return confirm('Are you sure you want to delete this tag?');">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <input type="hidden" name="id" value="{{ $value['id'] }}">
+                                                    <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                @endif
                             </tbody>
                         </table>
                     </div>

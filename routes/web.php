@@ -121,4 +121,7 @@ Route::middleware(['auth', 'verified', 'role:super-admin|author'])->group(functi
     Route::get('/tags', [TagController::class, 'index'])->name('tags.index');
     Route::get('/tags/create', [TagController::class, 'create'])->name('tags.create');
     Route::post('tags/store', [TagController::class, 'store'])->name('tags.store');
+    Route::get('/tags/edit/{id}', [TagController::class, 'edit'])->name('tags.edit');
+    Route::post('/tags/{id}', [TagController::class, 'update'])->name('tags.update');
+    Route::delete('/delete', [TagController::class, 'delete'])->name('tags.delete');
 });

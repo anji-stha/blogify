@@ -4,13 +4,13 @@
         <div class="container-fluid"> <!--begin::Row-->
             <div class="row">
                 <div class="col-sm-6">
-                    <h3 class="mb-0">Create Tag</h3>
+                    <h3 class="mb-0">Edit Tag</h3>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-end">
                         <li class="breadcrumb-item"><a href="{{ route('tags.index') }}">Tags</a></li>
                         <li class="breadcrumb-item active" aria-current="page">
-                            Create
+                            Edit
                         </li>
                     </ol>
                 </div>
@@ -24,24 +24,24 @@
                     <a class="btn btn-sm btn-danger" href="{{ route('tags.index') }}">Back</a>
                 </div>
                 <div class="card-body">
-                    <form class="row g-3" action="{{ route('tags.store') }}" method="POST">
+                    <form class="row g-3" action="{{ route('tags.update', $tag->id) }}" method="POST">
                         @csrf
                         <div class="col">
                             <input type="text" class="form-control" placeholder="Tag Name" aria-label="Tag Name"
-                                id="name" name="name">
+                                id="name" name="name" value="{{ old('name', $tag->name) }}">
                             @error('name')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
                         <div class="col">
                             <input type="text" class="form-control" placeholder="Tag Slug" aria-label="Tag Slug"
-                                id="slug" name="slug">
+                                id="slug" name="slug" value="{{ old('slug', $tag->slug) }}">
                             @error('slug')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
                         <div class="col-12">
-                            <button type="submit" class="btn btn-primary">Create</button>
+                            <button type="submit" class="btn btn-primary">Update</button>
                         </div>
                     </form>
                 </div>
