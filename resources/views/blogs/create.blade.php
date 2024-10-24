@@ -38,6 +38,45 @@
                                     <label for="slug" class="form-label">Slug</label>
                                     <input type="text" class="form-control" id="slug" name="slug" />
                                 </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label for="category" class="form-label">Category</label>
+                                        <div class="row">
+                                            @if ($categories->isNotEmpty())
+                                                @foreach ($categories as $category)
+                                                    <div class="col-md-4 mb-2">
+                                                        <div class="form-check">
+                                                            <input type="checkbox" name="categories[]"
+                                                                id="category-{{ $category->id }}"
+                                                                value="{{ $category->name }}" class="form-check-input">
+                                                            <label for="category-{{ $category->id }}"
+                                                                class="form-check-label">{{ $category->name }}</label>
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                            @endif
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="tags" class="form-label">Tags</label>
+                                        <div class="row">
+                                            @if ($tags->isNotEmpty())
+                                                @foreach ($tags as $tag)
+                                                    <div class="col-md-4 mb-2">
+                                                        <div class="form-check">
+                                                            <input type="checkbox" name="tags[]"
+                                                                id="tag-{{ $tag->id }}" value="{{ $tag->name }}"
+                                                                class="form-check-input">
+                                                            <label for="tag-{{ $tag->id }}"
+                                                                class="form-check-label">{{ $tag->name }}</label>
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                            @endif
+                                        </div>
+                                    </div>
+
+                                </div>
                                 <div class="mb-3">
                                     <label for="image" class="form-label">Image</label>
                                     <input class="form-control" type="file" id="image" name="image">

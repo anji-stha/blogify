@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
+use App\Models\Tag;
 use Illuminate\Http\Request;
 
 class BlogController extends Controller
@@ -14,6 +16,11 @@ class BlogController extends Controller
 
     public function create()
     {
-        return view('blogs.create');
+        $category = Category::get();
+        $tags = Tag::get();
+        return view('blogs.create', [
+            'tags' => $tags,
+            'categories' => $category
+        ]);
     }
 }
