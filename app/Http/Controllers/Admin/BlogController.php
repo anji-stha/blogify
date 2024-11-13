@@ -23,4 +23,9 @@ class BlogController extends Controller
             'categories' => $category
         ]);
     }
+
+    public function save(Request $request)
+    {
+        dd($request->all());
+    }
 }

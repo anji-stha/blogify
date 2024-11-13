@@ -27,7 +27,7 @@
                                 Create Blog
                             </div>
                         </div>
-                        <form action="" method="POST" enctype="multipart/form-data">
+                        <form action="{{ route('blog.save') }}" method="POST" enctype="multipart/form-data">
                             @csrf
                             <div class="card-body">
                                 <div class="mb-3">
@@ -38,44 +38,61 @@
                                     <label for="slug" class="form-label">Slug</label>
                                     <input type="text" class="form-control" id="slug" name="slug" />
                                 </div>
-                                <div class="row">
+                                <div class="row mb-3">
                                     <div class="col-md-6">
-                                        <label for="category" class="form-label">Category</label>
-                                        <div class="row">
-                                            @if ($categories->isNotEmpty())
-                                                @foreach ($categories as $category)
-                                                    <div class="col-md-4 mb-2">
-                                                        <div class="form-check">
-                                                            <input type="checkbox" name="categories[]"
-                                                                id="category-{{ $category->id }}"
-                                                                value="{{ $category->name }}" class="form-check-input">
-                                                            <label for="category-{{ $category->id }}"
-                                                                class="form-check-label">{{ $category->name }}</label>
-                                                        </div>
-                                                    </div>
-                                                @endforeach
-                                            @endif
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <label for="category" class="form-label">Category</label>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    @if ($categories->isNotEmpty())
+                                                        @foreach ($categories as $category)
+                                                            <div class="col-md-4 mb-2">
+                                                                <div class="form-check">
+                                                                    <input type="checkbox" name="categories[]"
+                                                                        id="category-{{ $category->id }}"
+                                                                        value="{{ $category->name }}"
+                                                                        class="form-check-input">
+                                                                    <label for="category-{{ $category->id }}"
+                                                                        class="form-check-label">{{ $category->name }}</label>
+                                                                </div>
+                                                            </div>
+                                                        @endforeach
+                                                    @else
+                                                        <p>No Categories Available</p>
+                                                    @endif
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
-                                        <label for="tags" class="form-label">Tags</label>
-                                        <div class="row">
-                                            @if ($tags->isNotEmpty())
-                                                @foreach ($tags as $tag)
-                                                    <div class="col-md-4 mb-2">
-                                                        <div class="form-check">
-                                                            <input type="checkbox" name="tags[]"
-                                                                id="tag-{{ $tag->id }}" value="{{ $tag->name }}"
-                                                                class="form-check-input">
-                                                            <label for="tag-{{ $tag->id }}"
-                                                                class="form-check-label">{{ $tag->name }}</label>
-                                                        </div>
-                                                    </div>
-                                                @endforeach
-                                            @endif
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <label for="tags" class="form-label">Tags</label>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    @if ($tags->isNotEmpty())
+                                                        @foreach ($tags as $tag)
+                                                            <div class="col-md-4 mb-2">
+                                                                <div class="form-check">
+                                                                    <input type="checkbox" name="tags[]"
+                                                                        id="tag-{{ $tag->id }}"
+                                                                        value="{{ $tag->name }}"
+                                                                        class="form-check-input">
+                                                                    <label for="tag-{{ $tag->id }}"
+                                                                        class="form-check-label">{{ $tag->name }}</label>
+                                                                </div>
+                                                            </div>
+                                                        @endforeach
+                                                    @else
+                                                        <p>No tags available</p>
+                                                    @endif
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-
                                 </div>
                                 <div class="mb-3">
                                     <label for="image" class="form-label">Image</label>
@@ -87,6 +104,7 @@
                                 </div>
                             </div>
                             <div class="card-footer">
+                                <input type="hidden" name="user_id" id="user_id" value="{{ auth()->id() }}">
                                 <button type="submit" class="btn btn-primary">
                                     Submit
                                 </button>
@@ -97,4 +115,17 @@
             </div>
         </div>
     </div>
+
+    <script>
+        document.getElementById('title').addEventListener('input', function() {
+            const title = this.value;
+            const slug = title.toLowerCase()
+                .trim()
+                .replace(/[^a-z0-9 -]/g, '')
+                .replace(/\s+/g, '-')
+                .replace(/-+/g, '-')
+
+            document.getElementById('slug').value = slug;
+        })
+    </script>
 @endsection

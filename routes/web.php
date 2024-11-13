@@ -107,7 +107,8 @@ Route::middleware(['auth', 'verified', 'role:super-admin|author'])->group(functi
 
     // Blogs
     Route::get('/blogs', [BlogController::class, 'index'])->name('blog.index');
-    Route::get('/create-blog', [BlogController::class, 'create'])->name('blog.create');
+    Route::get('/blogs/create', [BlogController::class, 'create'])->name('blog.create');
+    Route::post('/blogs/save', [BlogController::class, 'save'])->name('blog.save');
 
     // Categories
     Route::get('/categories', [CategoryController::class, 'index'])->name('category.index');
