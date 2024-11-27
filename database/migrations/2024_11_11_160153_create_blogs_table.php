@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('slug')->unique();
             $table->string('thumbnail')->nullable();
             $table->longText('body');
+            $table->enum('status', ['draft', 'published', 'trash'])->default('draft');
             $table->foreignId('user_id')
                 ->constrained('users', 'id')
                 ->onDelete('cascade')

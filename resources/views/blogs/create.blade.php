@@ -153,7 +153,6 @@
             const content = tinymce.get('editor').getContent();
             const categories = document.querySelectorAll('input[name="categories[]"]:checked')
             const tags = document.querySelectorAll('input[name="tags[]"]:checked')
-            console.log('content')
             let isValid = true
 
             if (title.trim() === '') {

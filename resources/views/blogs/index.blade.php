@@ -30,35 +30,41 @@
                                 <tr>
                                     <th scope="col" class="text-center">S.N</th>
                                     <th scope="col" class="text-center">Title</th>
+                                    <th scope="col" class="text-center">Slug</th>
                                     <th scope="col" class="text-center">Description</th>
+                                    <th>Status</th>
                                     <th scope="col" class="text-center">Created Date</th>
                                     <th colspan="2" class="text-center">Handle</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {{-- @if ($roles->isNotEmpty())
-                                    @foreach ($roles as $key => $role)
+                                @if ($blogs->isNotEmpty())
+                                    @foreach ($blogs as $key => $blog)
+                                        {{-- {{ dd($blog) }} --}}
                                         <tr>
                                             <th scope="row">{{ $key + 1 }}</th>
-                                            <td>{{ $role->name }}</td>
-                                            <td>{{ $role->permissions->pluck('name')->implode(', ') }}</td>
-                                            <td>{{ \Carbon\Carbon::parse($role->created_at)->format('d M, Y') }}</td>
+                                            <td>{{ Str::ucfirst($blog->title) }}</td>
+                                            <td>{{ $blog->slug }}</td>
+                                            <td style="width: 50%;">{!! Str::words($blog->body, 50, '...') !!}</td>
+                                            <td>{{ Str::ucfirst($blog->status) }}</td>
+                                            <td>{{ \Carbon\Carbon::parse($blog->created_at)->format('d M, Y') }}</td>
                                             <td>
                                                 <a class="btn btn-sm btn-info"
-                                                    href="{{ route('edit.role', $role->id) }}">Edit</a>
-                                                <form action="{{ route('delete.role') }}" method="POST" class="d-inline"
-                                                    onsubmit="return confirm('Are you sure you want to delete this role?');">
+                                                    href="{{ route('edit.role', $blog->id) }}">Edit</a>
+                                                <form action="{{ route('delete.blog') }}" method="POST" class="d-inline"
+                                                    onsubmit="return confirm('Are you sure you want to delete this blog?');">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <input type="hidden" name="id" value="{{ $role->id }}">
+                                                    <input type="hidden" name="id" value="{{ $blog->id }}">
                                                     <button type="submit" class="btn btn-sm btn-danger">Delete</button>
                                                 </form>
                                             </td>
                                         </tr>
                                     @endforeach
-                                @endif --}}
+                                @endif
                             </tbody>
                         </table>
+                        {{ $blogs->links('pagination::bootstrap-5') }}
                     </div>
                 </div>
             </div>

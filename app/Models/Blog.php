@@ -17,6 +17,10 @@ class Blog extends Model
         'user_id'
     ];
 
+    protected $attributes = [
+        'status' => 'draft',
+    ];
+
     /**
      * The categories that belong to the blog.
      */

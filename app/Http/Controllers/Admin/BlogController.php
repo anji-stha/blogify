@@ -13,7 +13,10 @@ class BlogController extends Controller
 {
     public function index()
     {
-        return view('blogs.index');
+        $blogs = Blog::paginate(20);
+        return view('blogs.index', [
+            'blogs' => $blogs
+        ]);
     }
 
     public function create()
