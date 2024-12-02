@@ -60,6 +60,7 @@
                             </tbody>
                         </table>
                     </div>
+                    {{ $tags->links('pagination::bootstrap-5') }}
                 </div>
             </div>
         </div>

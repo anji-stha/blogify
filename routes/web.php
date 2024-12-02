@@ -110,6 +110,8 @@ Route::middleware(['auth', 'verified', 'role:super-admin|author'])->group(functi
     Route::get('/blogs/create', [BlogController::class, 'create'])->name('blog.create');
     Route::post('/blogs/save', [BlogController::class, 'save'])->name('blog.save');
     Route::delete('/blog', [BlogController::class, 'delete'])->name('blog.delete');
+    Route::get('/blog/edit/{id}', [BlogController::class, 'edit'])->name('blog.edit');
+    Route::post('/blog/{id}', [BlogController::class, 'update'])->name('blog.update');
 
     // Categories
     Route::get('/categories', [CategoryController::class, 'index'])->name('category.index');

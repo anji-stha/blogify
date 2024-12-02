@@ -50,8 +50,8 @@
                                             <td>{{ \Carbon\Carbon::parse($blog->created_at)->format('d M, Y') }}</td>
                                             <td>
                                                 <a class="btn btn-sm btn-info"
-                                                    href="{{ route('edit.role', $blog->id) }}">Edit</a>
-                                                <form action="{{ route('delete.blog') }}" method="POST" class="d-inline"
+                                                    href="{{ route('blog.edit', $blog->id) }}">Edit</a>
+                                                <form action="{{ route('blog.delete') }}" method="POST" class="d-inline"
                                                     onsubmit="return confirm('Are you sure you want to delete this blog?');">
                                                     @csrf
                                                     @method('DELETE')

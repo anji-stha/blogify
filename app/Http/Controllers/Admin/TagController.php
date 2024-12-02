@@ -12,9 +12,10 @@ class TagController extends Controller
 {
     public function index()
     {
-        $tags = Tag::get();
+        $tag = Tag::paginate(10);
+
         return view('tags.index', [
-            'tags' => $tags
+            'tags' => $tag
         ]);
     }
 

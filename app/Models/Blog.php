@@ -14,11 +14,8 @@ class Blog extends Model
         'slug',
         'thumbnail',
         'body',
-        'user_id'
-    ];
-
-    protected $attributes = [
-        'status' => 'draft',
+        'user_id',
+        'status',
     ];
 
     /**

@@ -1,5 +1,13 @@
 @extends('admin.layout.main')
 @section('content')
+    <style>
+        #thumbnailPreview {
+            max-width: 40%;
+            height: auto;
+            display: block;
+            margin-top: 10px;
+        }
+    </style>
     <div class="app-content-header"> <!--begin::Container-->
         <div class="container-fluid"> <!--begin::Row-->
             <div class="row">
@@ -24,22 +32,25 @@
                 <div class="col-md-12">
                     <div class="card card-primary card-outline mb-4">
                         <div class="card-header d-flex justify-content-between">
-                            <h5 class="card-title mb-0">Create Blog</h5>
+                            <h5 class="card-title mb-0">Update Blog</h5>
                             <a href="{{ route('blog.index') }}" class="btn btn-secondary ms-auto">Back</a>
                         </div>
-                        <form action="{{ route('blog.save') }}" method="POST" enctype="multipart/form-data" id="blogForm">
+                        <form action="{{ route('blog.update', ['id' => $blog->id]) }}" method="POST"
+                            enctype="multipart/form-data" id="editBlogForm">
                             @csrf
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-md-10">
                                         <div class="mb-3">
                                             <label for="title" class="form-label">Title</label>
-                                            <input type="text" class="form-control" id="title" name="title" />
+                                            <input type="text" class="form-control" id="title" name="title"
+                                                value="{{ $blog->title }}" />
                                             <div class="invalid-input" id="titleError" style="display: none;"></div>
                                         </div>
                                         <div class="mb-3">
                                             <label for="slug" class="form-label">Slug</label>
-                                            <input type="text" class="form-control" id="slug" name="slug" />
+                                            <input type="text" class="form-control" id="slug" name="slug"
+                                                value="{{ $blog->slug }}" />
                                             <div class="invalid-input" id="slugError" style="display: none;"></div>
                                         </div>
                                     </div>
@@ -51,14 +62,16 @@
                                             <div class="card-body">
                                                 <div class="form-check">
                                                     <input class="form-check-input" type="radio" name="status"
-                                                        id="draft" value="draft" checked>
+                                                        id="draft" value="draft"
+                                                        {{ $blog->status === 'draft' ? 'checked' : '' }}>
                                                     <label class="form-check-label" for="draft">
                                                         Draft
                                                     </label>
                                                 </div>
                                                 <div class="form-check">
                                                     <input class="form-check-input" type="radio" name="status"
-                                                        id="publish" value="published">
+                                                        id="publish" value="published"
+                                                        {{ $blog->status === 'published' ? 'checked' : '' }}>
                                                     <label class="form-check-label" for="publish">
                                                         Publish
                                                     </label>
@@ -81,8 +94,8 @@
                                                                 <div class="form-check">
                                                                     <input type="checkbox" name="categories[]"
                                                                         id="category-{{ $category->id }}"
-                                                                        value="{{ $category->id }}"
-                                                                        class="form-check-input">
+                                                                        value="{{ $category->id }}" class="form-check-input"
+                                                                        {{ $hasCategory->contains($category->name) ? 'checked' : '' }}>
                                                                     <label for="category-{{ $category->id }}"
                                                                         class="form-check-label">{{ $category->name }}</label>
                                                                 </div>
@@ -110,7 +123,8 @@
                                                                     <input type="checkbox" name="tags[]"
                                                                         id="tag-{{ $tag->id }}"
                                                                         value="{{ $tag->id }}"
-                                                                        class="form-check-input">
+                                                                        class="form-check-input"
+                                                                        {{ $hasTag->contains($tag->name) ? 'checked' : '' }}>
                                                                     <label for="tag-{{ $tag->id }}"
                                                                         class="form-check-label">{{ $tag->name }}</label>
                                                                 </div>
@@ -128,17 +142,24 @@
                                 <div class="mb-3">
                                     <label for="thumbnail" class="form-label">Thumbnail</label>
                                     <input class="form-control" type="file" id="thumbnail" name="thumbnail">
+                                    <div id="oldThumbnailContainer">
+                                        @if ($blog->thumbnail)
+                                            <img id="thumbnailPreview" src="{{ asset('storage/' . $blog->thumbnail) }}">
+                                        @else
+                                            <p>No thumbnail available</p>
+                                        @endif
+                                    </div>
                                     <div class="invalid-input" id="thumbnailError" style="display: none;"></div>
                                 </div>
                                 <div class="mb-3">
                                     <label for="content" class="form-label">Body</label>
-                                    <textarea id="editor" name="content"></textarea>
+                                    <textarea id="editor" name="content">{{ $blog->body }}</textarea>
                                     <div class="invalid-input" id="contentError" style="display: none;"></div>
                                 </div>
                             </div>
                             <div class="card-footer">
                                 <button type="submit" class="btn btn-primary">
-                                    Submit
+                                    Update
                                 </button>
                             </div>
                         </form>
@@ -161,7 +182,7 @@
         })
 
         // Form submission
-        document.getElementById('blogForm').addEventListener('submit', function(event) {
+        document.getElementById('editBlogForm').addEventListener('submit', function(event) {
             event.preventDefault()
 
             const errorFields = document.querySelectorAll('.invalid-input')
@@ -179,7 +200,6 @@
             const content = tinymce.get('editor').getContent();
             const categories = document.querySelectorAll('input[name="categories[]"]:checked')
             const tags = document.querySelectorAll('input[name="tags[]"]:checked')
-
             let isValid = true
 
             if (title.trim() === '') {
@@ -210,11 +230,12 @@
                 document.getElementById('tagError').innerText = 'At least one tag must be selected'
             }
 
-            if (!thumbnail) {
-                isValid = false
-                document.getElementById('thumbnailError').style.display = 'block'
-                document.getElementById('thumbnailError').style.color = 'red'
-                document.getElementById('thumbnailError').innerText = 'Thumbnail is required'
+            // If no thumbnail is selected, it means the user wants to keep the old thumbnail
+            if (!thumbnail && !document.getElementById('thumbnailPreview')) {
+                isValid = false;
+                document.getElementById('thumbnailError').style.display = 'block';
+                document.getElementById('thumbnailError').style.color = 'red';
+                document.getElementById('thumbnailError').innerText = 'Thumbnail is required';
             } else {
                 if (thumbnail) {
                     const allowedExtensions = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp'];
@@ -258,7 +279,9 @@
                 console.log(pair[0] + ': ' + pair[1]); // Log the content field
             }
 
-            fetch("{{ route('blog.save') }}", {
+            const id = {{ $blog->id }}
+            const url = `{{ route('blog.update', ':id') }}`.replace(':id', id)
+            fetch(url, {
                     method: "POST",
                     body: formData,
                     headers: {
@@ -267,6 +290,7 @@
                 })
                 .then(response => response.json())
                 .then(data => {
+                    console.log(data)
                     if (data.status === 'error') {
                         const errors = data.message
                         for (const field in errors) {
@@ -280,11 +304,8 @@
                             }
                         }
                     } else {
-                        document.getElementById('responseMessage').innerText = 'Form submitted successfully.'
+                        document.getElementById('responseMessage').innerText = 'Blog updated successfully.'
                         document.getElementById('responseMessage').style.color = 'green'
-
-                        document.getElementById('blogForm').reset()
-                        tinymce.get('editor').setContent('')
 
                         errorFields.forEach(field => {
                             field.style.display = 'none'
