@@ -112,6 +112,9 @@ Route::middleware(['auth', 'verified', 'role:super-admin|author'])->group(functi
     Route::delete('/blog', [BlogController::class, 'delete'])->name('blog.delete');
     Route::get('/blog/edit/{id}', [BlogController::class, 'edit'])->name('blog.edit');
     Route::post('/blog/{id}', [BlogController::class, 'update'])->name('blog.update');
+    Route::get('/blogs/trash', [BlogController::class, 'trash'])->name('blog.trash');
+    Route::delete('/blog/trash', [BlogController::class, 'permanentDelete'])->name('blog.permanentDelete');
+    Route::get('blog/restore/{id}', [BlogController::class, 'restore'])->name('blog.restore');
 
     // Categories
     Route::get('/categories', [CategoryController::class, 'index'])->name('category.index');

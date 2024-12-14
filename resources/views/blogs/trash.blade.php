@@ -21,10 +21,8 @@
         <div class="container-fluid"> <!--begin::Row-->
             <div class="card">
                 <div class="card-header d-flex justify-content-between">
-                    <div class="btn-group" role="group" aria-label="Blog Actions">
-                        <a class="btn btn-primary btn-sm" href="{{ route('blog.create') }}">Create</a>
-                        <a class="btn btn-danger btn-sm" href="{{ route('blog.trash') }}">Trash</a>
-                    </div>
+                    <h4 class="card-title">Trash Blogs</h4>
+                    <a href="{{ route('blog.index') }}" class="btn btn-secondary ms-auto">Back</a>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
@@ -52,13 +50,15 @@
                                             <td>{{ \Carbon\Carbon::parse($blog->created_at)->format('d M, Y') }}</td>
                                             <td>
                                                 <a class="btn btn-sm btn-info"
-                                                    href="{{ route('blog.edit', $blog->id) }}">Edit</a>
-                                                <form action="{{ route('blog.delete') }}" method="POST" class="d-inline"
-                                                    onsubmit="return confirm('Are you sure you want to delete this blog?');">
+                                                    href="{{ route('blog.restore', $blog->id) }}">Restore</a>
+                                                <form action="{{ route('blog.permanentDelete') }}" method="POST"
+                                                    class="d-inline"
+                                                    onsubmit="return confirm('Are you sure you want to delete this blog permanently?');">
                                                     @csrf
                                                     @method('DELETE')
                                                     <input type="hidden" name="id" value="{{ $blog->id }}">
-                                                    <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                                                    <button type="submit" class="btn btn-sm btn-danger">Delete
+                                                        Permanently</button>
                                                 </form>
                                             </td>
                                         </tr>
