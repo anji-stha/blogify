@@ -24,7 +24,7 @@ class TagController extends Controller
         return view('tags.create');
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request)
     {
         $validated = Validator::make($request->all(), [
             'name' => ['required', 'unique:tags,name'],
@@ -32,14 +32,29 @@ class TagController extends Controller
         ]);
 
         if ($validated->fails()) {
+            if ($request->wantsJson()) {
+                // Return JSON response for API requests
+                return response()->json([
+                    'success' => false,
+                    'errors' => $validated->errors()
+                ], 400);
+            }
             return redirect()->back()->withErrors($validated)->withInput();
         }
 
-        Tag::create([
+        $tag = Tag::create([
             'name' => $request->input('name'),
             'slug' => $request->input('slug')
         ]);
 
+        if ($request->wantsJson()) {
+            // JSON response for API requests
+            return response()->json([
+                'success' => true,
+                'message' => 'Tag Created Successfully',
+                'tag' => $tag
+            ], 201);
+        }
         return redirect()->route('tags.index')->with('success', 'Tag Created Successfully');
     }
 

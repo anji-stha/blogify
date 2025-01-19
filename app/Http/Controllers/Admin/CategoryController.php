@@ -23,7 +23,7 @@ class CategoryController extends Controller
         return view('categories.create');
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request)
     {
         $validated = Validator::make($request->all(), [
             'name' => ['required', 'unique:categories,name'],
@@ -31,6 +31,13 @@ class CategoryController extends Controller
         ]);
 
         if ($validated->fails()) {
+            if ($request->wantsJson()) {
+                // Return JSON response for API requests
+                return response()->json([
+                    'success' => false,
+                    'errors' => $validated->errors()
+                ], 400);
+            }
             return redirect()->back()->withErrors($validated)->withInput();
         }
 
@@ -38,6 +45,15 @@ class CategoryController extends Controller
             'name' => $request->input('name'),
             'slug' => $request->input('slug'),
         ]);
+
+        if ($request->wantsJson()) {
+            // JSON response for API requests
+            return response()->json([
+                'success' => true,
+                'message' => 'Category Created Successfully',
+                'category' => $category
+            ], 201);
+        }
 
         return redirect()->route('category.index')->with('success', 'Category Added Successfully');
     }

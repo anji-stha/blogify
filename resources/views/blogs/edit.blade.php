@@ -83,24 +83,19 @@
                                 <div class="row mb-3">
                                     <div class="col-md-6">
                                         <div class="card">
-                                            <div class="card-header">
-                                                <label for="category" class="form-label">Category</label>
-                                            </div>
                                             <div class="card-body">
-                                                <div class="row">
+                                                <div class="mb-3">
+                                                    <label for="categories" class="form-label">Select
+                                                        Categories</label>
                                                     @if ($categories->isNotEmpty())
-                                                        @foreach ($categories as $category)
-                                                            <div class="col-md-4 mb-2">
-                                                                <div class="form-check">
-                                                                    <input type="checkbox" name="categories[]"
-                                                                        id="category-{{ $category->id }}"
-                                                                        value="{{ $category->id }}" class="form-check-input"
-                                                                        {{ $hasCategory->contains($category->name) ? 'checked' : '' }}>
-                                                                    <label for="category-{{ $category->id }}"
-                                                                        class="form-check-label">{{ $category->name }}</label>
-                                                                </div>
-                                                            </div>
-                                                        @endforeach
+                                                        <select name="categories[]" id="categories"
+                                                            class="form-control select2" multiple="multiple">
+                                                            @foreach ($categories as $category)
+                                                                <option value="{{ $category->id }}"
+                                                                    {{ $hasCategory->contains($category->name) ? 'selected' : '' }}>
+                                                                    {{ $category->name }}</option>
+                                                            @endforeach
+                                                        </select>
                                                     @else
                                                         <p>No Categories Available</p>
                                                     @endif
@@ -111,30 +106,24 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="card">
-                                            <div class="card-header">
-                                                <label for="tags" class="form-label">Tags</label>
-                                            </div>
                                             <div class="card-body">
-                                                <div class="row">
+                                                <div class="mb-3">
+                                                    <label for="tags" class="form-label">Select
+                                                        Tags</label>
                                                     @if ($tags->isNotEmpty())
-                                                        @foreach ($tags as $tag)
-                                                            <div class="col-md-4 mb-2">
-                                                                <div class="form-check">
-                                                                    <input type="checkbox" name="tags[]"
-                                                                        id="tag-{{ $tag->id }}"
-                                                                        value="{{ $tag->id }}"
-                                                                        class="form-check-input"
-                                                                        {{ $hasTag->contains($tag->name) ? 'checked' : '' }}>
-                                                                    <label for="tag-{{ $tag->id }}"
-                                                                        class="form-check-label">{{ $tag->name }}</label>
-                                                                </div>
-                                                            </div>
-                                                        @endforeach
+                                                        <select name="tags[]" id="tags" class="form-control select2"
+                                                            multiple="multiple">
+                                                            @foreach ($tags as $tag)
+                                                                <option value="{{ $tag->id }}"
+                                                                    {{ $hasTag->contains($tag->name) ? 'selected' : '' }}>
+                                                                    {{ $tag->name }}</option>
+                                                            @endforeach
+                                                        </select>
                                                     @else
                                                         <p>No tags available</p>
                                                     @endif
+                                                    <div class="invalid-input" id="tagError" style="display: none;"></div>
                                                 </div>
-                                                <div class="invalid-input" id="tagError" style="display: none;"></div>
                                             </div>
                                         </div>
                                     </div>
@@ -198,8 +187,10 @@
             const thumbnail = document.getElementById('thumbnail').files[0]
             const slug = document.getElementById('slug').value
             const content = tinymce.get('editor').getContent();
-            const categories = document.querySelectorAll('input[name="categories[]"]:checked')
-            const tags = document.querySelectorAll('input[name="tags[]"]:checked')
+            const selectCategories = document.getElementById('categories');
+            const selectedCategories = Array.from(selectCategories.selectedOptions).map(option => option.values);
+            const selectTags = document.getElementById('tags');
+            const selectedTags = Array.from(selectTags.selectedOptions).map(option => option.value);
             let isValid = true
 
             if (title.trim() === '') {
@@ -216,14 +207,14 @@
                 document.getElementById('slugError').innerText = 'Slug is required'
             }
 
-            if (categories.length === 0) {
+            if (selectedCategories.length === 0) {
                 isValid = false
                 document.getElementById('categoryError').style.display = 'block'
                 document.getElementById('categoryError').style.color = 'red'
                 document.getElementById('categoryError').innerText = 'At least one category must be selected'
             }
 
-            if (tags.length === 0) {
+            if (selectedTags.length === 0) {
                 isValid = false
                 document.getElementById('tagError').style.display = 'block'
                 document.getElementById('tagError').style.color = 'red'
@@ -327,5 +318,17 @@
                     }, 3000)
                 })
         })
+
+        $(document).ready(function() {
+            // Initialize Select2
+            $('#tags').select2({
+                placeholder: 'Select tags', // Placeholder text
+                allowClear: true // Allow clearing the selection
+            });
+            $('#categories').select2({
+                placeholder: 'Select categories', // Placeholder text
+                allowClear: true // Allow clearing the selection
+            });
+        });
     </script>
 @endsection

@@ -70,26 +70,22 @@
                                 <div class="row mb-3">
                                     <div class="col-md-6">
                                         <div class="card">
-                                            <div class="card-header">
-                                                <label for="category" class="form-label">Category</label>
-                                            </div>
                                             <div class="card-body">
-                                                <div class="row">
+                                                <div class="mb-3">
+                                                    <label for="categories" class="form-label">Select Categories</label>
                                                     @if ($categories->isNotEmpty())
-                                                        @foreach ($categories as $category)
-                                                            <div class="col-md-4 mb-2">
-                                                                <div class="form-check">
-                                                                    <input type="checkbox" name="categories[]"
-                                                                        id="category-{{ $category->id }}"
-                                                                        value="{{ $category->id }}"
-                                                                        class="form-check-input">
-                                                                    <label for="category-{{ $category->id }}"
-                                                                        class="form-check-label">{{ $category->name }}</label>
-                                                                </div>
-                                                            </div>
-                                                        @endforeach
+                                                        <select name="categories[]" id="categories"
+                                                            class="form-select select2" multiple="multiple">
+                                                            @foreach ($categories as $category)
+                                                                <option value="{{ $category->id }}">{{ $category->name }}
+                                                                </option>
+                                                            @endforeach
+                                                            <option value="create-new-category">Add New Category</option>
+                                                        </select>
                                                     @else
-                                                        <p>No Categories Available</p>
+                                                        <div class="alert alert-info" role="alert">
+                                                            No Category available
+                                                        </div>
                                                     @endif
                                                 </div>
                                                 <div class="invalid-input" id="categoryError" style="display: none;"></div>
@@ -98,26 +94,22 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="card">
-                                            <div class="card-header">
-                                                <label for="tags" class="form-label">Tags</label>
-                                            </div>
                                             <div class="card-body">
-                                                <div class="row">
+                                                <div class="mb-3">
+                                                    <label for="tags" class="form-label">Select Tags</label>
                                                     @if ($tags->isNotEmpty())
-                                                        @foreach ($tags as $tag)
-                                                            <div class="col-md-4 mb-2">
-                                                                <div class="form-check">
-                                                                    <input type="checkbox" name="tags[]"
-                                                                        id="tag-{{ $tag->id }}"
-                                                                        value="{{ $tag->id }}"
-                                                                        class="form-check-input">
-                                                                    <label for="tag-{{ $tag->id }}"
-                                                                        class="form-check-label">{{ $tag->name }}</label>
-                                                                </div>
-                                                            </div>
-                                                        @endforeach
+                                                        <select name="tags[]" id="tags" class="form-select select2"
+                                                            multiple="multiple">
+                                                            @foreach ($tags as $tag)
+                                                                <option value="{{ $tag->id }}">{{ $tag->name }}
+                                                                </option>
+                                                            @endforeach
+                                                            <option value="create-new-tag">Add New Tag</option>
+                                                        </select>
                                                     @else
-                                                        <p>No tags available</p>
+                                                        <div class="alert alert-info" role="alert">
+                                                            No tags available
+                                                        </div>
                                                     @endif
                                                 </div>
                                                 <div class="invalid-input" id="tagError" style="display: none;"></div>
@@ -144,6 +136,82 @@
                         </form>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- Modal for tag --}}
+    <div class="modal fade" id="createTagModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="createTagModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form method="POST" action="">
+                    @csrf
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="createTagModalLabel">Create New Tag</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="tagName" class="form-label">Tag Name</label>
+                            <input type="text" class="form-control" placeholder="Tag Name" aria-label="Tag Name"
+                                id="tagName" name="tagName">
+                            @error('tagName')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="mb-3">
+                            <label for="tagSlug" class="form-label">Tag Slug</label>
+                            <input type="text" class="form-control" placeholder="Tag Slug" aria-label="Tag Slug"
+                                id="tagSlug" name="tagSlug">
+                            @error('tagSlug')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" id="save-tag" class="btn btn-primary">Save Tag</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    {{-- Modal for category --}}
+    <div class="modal fade" id="createCategoryModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="createCategoryModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form method="POST" action="">
+                    @csrf
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="createCategoryModalLabel">Create New Category</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="categoryName" class="form-label">Category Name</label>
+                            <input type="text" class="form-control" placeholder="Category Name"
+                                aria-label="Category Name" id="categoryName" name="categoryName">
+                            @error('categoryName')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="mb-3">
+                            <label for="categorySlug" class="form-label">Category Slug</label>
+                            <input type="text" class="form-control" placeholder="Category Slug"
+                                aria-label="Category Slug" id="categorySlug" name="categorySlug">
+                            @error('categorySlug')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" id="save-category" class="btn btn-primary">Save Category</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -177,8 +245,10 @@
             const thumbnail = document.getElementById('thumbnail').files[0]
             const slug = document.getElementById('slug').value
             const content = tinymce.get('editor').getContent();
-            const categories = document.querySelectorAll('input[name="categories[]"]:checked')
-            const tags = document.querySelectorAll('input[name="tags[]"]:checked')
+            const selectCategories = document.getElementById('categories');
+            const selectedCategories = Array.from(selectCategories.selectedOptions).map(option => option.values);
+            const selectTags = document.getElementById('tags');
+            const selectedTags = Array.from(selectTags.selectedOptions).map(option => option.value);
 
             let isValid = true
 
@@ -196,14 +266,14 @@
                 document.getElementById('slugError').innerText = 'Slug is required'
             }
 
-            if (categories.length === 0) {
+            if (selectedCategories.length === 0) {
                 isValid = false
                 document.getElementById('categoryError').style.display = 'block'
                 document.getElementById('categoryError').style.color = 'red'
                 document.getElementById('categoryError').innerText = 'At least one category must be selected'
             }
 
-            if (tags.length === 0) {
+            if (selectedTags.length === 0) {
                 isValid = false
                 document.getElementById('tagError').style.display = 'block'
                 document.getElementById('tagError').style.color = 'red'
@@ -306,5 +376,146 @@
                     }, 3000)
                 })
         })
+
+        $(document).ready(function() {
+            // Initialize Select2
+            $('#tags').select2({
+                placeholder: 'Select tags', // Placeholder text
+                allowClear: true // Allow clearing the selection
+            });
+            $('#categories').select2({
+                placeholder: 'Select categories', // Placeholder text
+                allowClear: true // Allow clearing the selection
+            });
+
+            // Show modal when "Create New Tag" option is selected
+            $('#tags').on('select2:select', function(e) {
+                var selectedValue = e.params.data.id; // Get selected value
+
+                if (selectedValue === 'create-new-tag') {
+                    // Show the modal for creating a new tag
+                    $('#createTagModal').modal('show');
+                    $('#tags').val(null).trigger('change'); // Clear selection from Select2 dropdown
+                }
+            });
+
+            // Show modal when "Create New Category" option is selected
+            $('#categories').on('select2:select', function(e) {
+                var selectedValue = e.params.data.id; // Get selected value
+
+                if (selectedValue === 'create-new-category') {
+                    // Show the modal for creating a new category
+                    $('#createCategoryModal').modal('show');
+                    $('#categories').val(null).trigger('change'); // Clear selection from Select2 dropdown
+                }
+            });
+        });
+
+        // Tag slug
+        document.getElementById('tagName').addEventListener('input', function() {
+            const name = this.value;
+            const slug = name.toLowerCase()
+                .trim()
+                .replace(/[^a-z0-9 -]/g, '')
+                .replace(/\s+/g, '-')
+                .replace(/-+/g, '-')
+
+            document.getElementById('tagSlug').value = slug;
+        })
+
+        // Save new tag
+        document.getElementById('save-tag').addEventListener('click', function() {
+            var name = document.getElementById('tagName').value;
+            var slug = document.getElementById('tagSlug').value;
+
+            if (name && slug) {
+                fetch('/api/tag', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'accept': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: JSON.stringify({
+                            name: name,
+                            slug: slug
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            $('#createTagModal').modal('hide');
+                            document.getElementById('tagName').value = '';
+                            document.getElementById('tagSlug').value = '';
+                            var newOption = new Option(data.tag.name, data.tag.id, false,
+                                true);
+                            $('#tags').append(newOption).trigger('change');
+                        } else {
+                            alert('Error saving tag');
+                        }
+                    })
+                    .catch(errors => {
+                        console.log(errors)
+                        console.error('Error:', errors);
+                        alert('Something went wrong');
+                    });
+            } else {
+                alert('Please fill out both fields');
+            }
+        });
+
+        // Category slug
+        document.getElementById('categoryName').addEventListener('input', function() {
+            const name = this.value;
+            const slug = name.toLowerCase()
+                .trim()
+                .replace(/[^a-z0-9 -]/g, '')
+                .replace(/\s+/g, '-')
+                .replace(/-+/g, '-')
+
+            document.getElementById('categorySlug').value = slug;
+        })
+
+        // Save new category
+        document.getElementById('save-category').addEventListener('click', function() {
+            var name = document.getElementById('categoryName').value;
+            var slug = document.getElementById('categorySlug').value;
+
+            if (name && slug) {
+                fetch('/api/category', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'accept': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: JSON.stringify({
+                            name: name,
+                            slug: slug
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            console.log(data)
+                            $('#createCategoryModal').modal('hide');
+                            document.getElementById('categoryName').value = '';
+                            document.getElementById('categorySlug').value = '';
+                            var newOption = new Option(data.category.name, data.category.id, false,
+                                true);
+                            $('#categories').append(newOption).trigger('change');
+                        } else {
+                            alert('Error saving category');
+                        }
+                    })
+                    .catch(errors => {
+                        console.log(errors)
+                        console.error('Error:', errors);
+                        alert('Something went wrong');
+                    });
+            } else {
+                alert('Please fill out both fields');
+            }
+        });
     </script>
 @endsection
